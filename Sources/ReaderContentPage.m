@@ -284,8 +284,13 @@
 						const char *uri = (const char *)CGPDFStringGetBytePtr(uriString); // Destination URI string
 
 						NSString *target = [NSString stringWithCString:uri encoding:NSUTF8StringEncoding]; // NSString - UTF8
-
-						linkTarget = [NSURL URLWithString:[target stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                        
+                        NSMutableCharacterSet *alphaNumSymbols = [NSMutableCharacterSet characterSetWithCharactersInString:@"~!@#$&*()-_+=[]:;',/?."];
+                        [alphaNumSymbols formUnionWithCharacterSet:[NSCharacterSet alphanumericCharacterSet]];
+                        
+                        target = [target stringByAddingPercentEncodingWithAllowedCharacters:alphaNumSymbols];
+                        
+                        linkTarget = [NSURL URLWithString:target];
 
 						if (linkTarget == nil) NSLog(@"%s Bad URI '%@'", __FUNCTION__, target);
 					}
